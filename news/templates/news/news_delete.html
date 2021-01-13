@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <section class="features2 cid-slq0ZBExQm" id="features2-b">
+        <div class="container">
+            <form action="{{ news.get_delete_url }}" method="post">
+                {% csrf_token %}
+                <h4>Вы действительно хотите удалить этот несчятный объект {{ news.title|title }}</h4>
+                <a href="{{ news.get_absolute_url }}"><button class="btn">Cancel</button></a>
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ course.name }} - {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <form action="{{ course.get_update_url }}" method="post">
+            {% csrf_token %}
+            {% for foo in form %}
+                {{ foo.label }}
+                <p>{{ foo }}</p>
+            {% endfor %}
+            <button type="submit">Save</button>
+        </form>
+    </div>
+{% endblock %}

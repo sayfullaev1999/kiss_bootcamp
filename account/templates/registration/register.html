@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Register - {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    <section class="features2 cid-slq0ZBExQm" id="features2-b">
+    <div class="container">
+        <h1>This is registration page</h1>
+            <form action="{% url 'register' %}" method="post">
+                {% csrf_token %}
+                {% for foo in form %}
+                    {{ foo.label }}
+                    <p>{{ foo }}</p>
+                    {% if foo.errors %}
+                        {{ foo.errors }}
+                    {% endif %}
+                    <p>{{ foo.help_text }}</p>
+                {% endfor %}
+                <button type="submit">Register</button>
+            </form>
+
+    </div>
+
+</section>
+{% endblock %}

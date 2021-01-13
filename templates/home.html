@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% include 'intro.html' %}
+    <section class="features2 cid-slq0ZBExQm" id="features2-b">
+        <div class="container">
+            <div class="media-container-row">
+                {% for news in page_object.object_list %}
+                    <div class="card p-3 col-12 col-md-6 col-lg-3">
+                        <div class="card-wrapper">
+                            <div class="card-img">
+                                <img src="{{ news.image.url }}" alt="">
+                            </div>
+                            <div class="card-box">
+                                <p class="mbr-text mbr-fonts-style display-7">
+                                    {{ news.body|truncatewords:15 }}
+                                    <a href="{% url 'home_url' %}">Подробнее...</a>
+                                </p>
+                            </div>
+                            <div class="card-box">
+                                {{ news.date_pub }}
+                            </div>
+                        </div>
+                    </div>
+                    {#        <p>#}
+                    {#            <a href="{{ news.get_absolute_url }}">{{ news.title|title }}</a>#}
+                    {#        </p>#}
+                {% endfor %}
+            </div>
+
+        </div>
+    </section>
+    {% include 'mentor.html' %}
+    {% include 'contact.html' %}
+{% endblock %}

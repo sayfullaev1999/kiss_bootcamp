@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    News
+{% endblock %}
+
+{% block content %}
+    <section class="features2 cid-slq0ZBExQm" id="features2-b">
+        <div class="container">
+            <a href="{% url 'news_create_url' %}">
+                <button class="btn btn-success">Add new item</button>
+            </a>
+        </div>
+        <div class="container">
+            {% for news in page_object.object_list %}
+                <div class="media-container-row">
+                    <div class="card p-3 col-12 col-md-12 col-lg-12">
+                        <div class="card-wrapper">
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <div class="card-img">
+                                        <img src="{{ news.image.url }}" alt="">
+                                    </div>
+                                </div>
+                                <div class="col-lg-9">
+                                    <h2>{{ news.title }}</h2>
+                                    <div class="card-box">
+                                        <p class="mbr-text mbr-fonts-style display-7">
+                                            {{ news.body|truncatewords:100 }}
+                                        </p>
+                                        <a href="{{ news.get_absolute_url }}">Подробнее</a>
+                                    </div>
+                                    <div class="card-box">
+                                        {{ news.date_pub }}
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+    </section>
+{% endblock %}

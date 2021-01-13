@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}
+    Courses - {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    <section class="features2 cid-slq0ZBExQm" id="features2-b">
+        <div class="container">
+            <div class="media-container-row">
+                {% for course in courses %}
+                    <div class="card p-3 col-12 col-md-6 col-lg-3">
+                        <div class="card-wrapper">
+                            <div class="card-img">
+                                <img src="{{ course.image.url }}" alt="">
+                            </div>
+                            <div class="card-box">
+                                <p class="mbr-text mbr-fonts-style display-7">
+                                    {{ course.info|truncatewords:15 }}
+                                    <a href="{{ course.get_absolute_url }}">Подробнее..</a>
+                                </p>
+                            </div>
+                            <div class="card-box">
+                                {{ course.user.username }}
+                            </div>
+                        </div>
+                    </div>
+                    {#        <p>#}
+                    {#            <a href="{{ news.get_absolute_url }}">{{ news.title|title }}</a>#}
+                    {#        </p>#}
+                {% endfor %}
+            </div>
+
+        </div>
+    </section>
+{% endblock %}

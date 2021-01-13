@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <section class="features2 cid-slq0ZBExQm" id="features2-b">
+        <div class="container">
+            <h1>Edit News</h1>
+            <form action="{{ news.get_update_url }}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for foo in form %}
+                    {% if foo.errors %}
+                        {{ foo.errors }}
+                    {% endif %}
+                    {{ foo.label }}
+                    <p>{{ foo }}</p>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary">Edit</button>
+            </form>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <section class="features2 cid-slq0ZBExQm" id="features2-b">
+        <div class="container">
+            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                <div class="btn-group mr-2" role="group" aria-label="First group">
+                    <a href="{{ news.get_update_url }}">
+                        <button type="button" class="btn btn-primary">Update</button>
+                    </a>
+                </div>
+                <div class="btn-group mr-2" role="group" aria-label="Second group">
+                    <a href="{{ news.get_delete_url }}">
+                        <button type="button" class="btn btn-secondary">Delete</button>
+                    </a>
+                </div>
+            </div>
+            <div class="media-container-row">
+                <div class="card p-3 col-12 col-md-12 col-lg-12">
+                    <div class="card-wrapper">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="card-img">
+                                    <img src="{{ news.image.url }}" alt="">
+                                </div>
+                            </div>
+                            <div class="col-lg-9">
+                                <h2>{{ news.title }}</h2>
+                                <div class="card-box">
+                                    <p class="mbr-text mbr-fonts-style display-7">
+                                        {{ news.body }}
+
+                                    </p>
+                                </div>
+                                <div class="card-box">
+                                    {{ news.date_pub }}
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+{% endblock %}
+<p>title:{{ news.title|title }}</p>
+<p>image: <img src="{{ news.image.url }}" alt=""></p>
+<p>body:{{ news.body }}</p>
+<p>date pub: {{ news.date_pub }}</p>

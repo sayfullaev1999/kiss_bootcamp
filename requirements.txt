@@ -1,0 +1,8 @@
+django
+pillow
+gunicorn
+psycopg2-binary
+pytelegrambotapi
+python-dotenv
+cython
+vedis
