@@ -6,13 +6,15 @@
 
 {% block content %}
     <section class="features2 cid-slq0ZBExQm" id="features2-b">
+        {% if user.is_superuser %}
+            <div class="container">
+                <a href="{% url 'news_create_url' %}">
+                    <button class="btn btn-success">Add new item</button>
+                </a>
+            </div>
+        {% endif %}
         <div class="container">
-            <a href="{% url 'news_create_url' %}">
-                <button class="btn btn-success">Add new item</button>
-            </a>
-        </div>
-        <div class="container">
-            {% for news in page_object.object_list %}
+            {% for news in page_obj.object_list %}
                 <div class="media-container-row">
                     <div class="card p-3 col-12 col-md-12 col-lg-12">
                         <div class="card-wrapper">
@@ -30,17 +32,43 @@
                                         </p>
                                         <a href="{{ news.get_absolute_url }}">Подробнее</a>
                                     </div>
-                                    <div class="card-box">
-                                        {{ news.date_pub }}
+                                    <div class="card-box text-lg-right">
+                                        {{ news.date_pub|date:"Y-m-d" }}
                                     </div>
-
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             {% endfor %}
+            {% if is_paginated %}
+                <div class="media-container-row">
+                    <nav aria-label="...">
+                        <ul class="pagination">
+                            <li class="page-item {% if not page_obj.has_previous %} disabled {% endif %}">
+                                <a class="page-link" tabindex="-1" href="?page={{ page_obj.number|add:-1 }}"
+                                   aria-disabled="true">Previous</a>
+                            </li>
+                            {% for n in page_obj.paginator.page_range %}
+                                {% if page_obj.number == n %}
+                                    <li class="page-item active" aria-current="page">
+                                        <a class="page-link" href="?page={{ n }}">{{ n }}</a>
+                                    </li>
+                                {% elif n > page_obj.number|add:-2 and n < page_obj.number|add:2 %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ n }}">{{ n }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
 
+                            <li class="page-item {% if not page_obj.has_next %} disabled {% endif %}">
+                                <a class="page-link" href="?page={{ page_obj.number|add:1 }}">Next</a>
+                            </li>
+
+                        </ul>
+                    </nav>
+                </div>
+            {% endif %}
         </div>
     </section>
 {% endblock %}

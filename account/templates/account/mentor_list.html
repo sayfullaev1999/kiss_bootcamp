@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Mentor
+{% endblock %}
+{% block content %}
+    <section class="features2 cid-slq0ZBExQm carousel slide testimonials-slider cid-slpZwRkopg"
+             id="testimonials-slider1-7">
+        <div class="container text-center">
+            <h2 class="pb-5 mbr-fonts-style display-2">
+                KISS Bootcamp mentors
+            </h2>
+            <div class="carousel slide" data-ride="carousel" role="listbox">
+                <div class="carousel-inner">
+                    {% for mentor in mentors %}
+                        <div class="carousel-item">
+                            <div class="user col-md-8">
+                                <div class="user_image">
+                                    <img src="{{ mentor.image.url }}" alt="mentor image">
+                                </div>
+                                <div class="user_name mbr-bold pb-2 mbr-fonts-style display-7">
+                                    {{ mentor.user.get_full_name }}
+                                </div>
+                                <div class="user_text pb-3 mbr-fonts-style display-7">
+                                    {{ mentor.position }}
+                                </div>
+                                <div class="user_desk mbr-light mbr-fonts-style display-7">
+                                    <a href="{{ mentor.get_absolute_url }}">Подробнее...</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="carousel-controls">
+                    <a class="carousel-control-prev" role="button" data-slide="prev">
+                        <span aria-hidden="true" class="mbri-arrow-prev mbr-iconfont"></span>
+                        <span class="sr-only">Назад</span>
+                    </a>
+                    <a class="carousel-control-next" role="button" data-slide="next">
+                        <span aria-hidden="true" class="mbri-arrow-next mbr-iconfont"></span>
+                        <span class="sr-only">Вперед</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+

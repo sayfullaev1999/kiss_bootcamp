@@ -2,16 +2,6 @@
 
 <section class="menu cid-qTkzRZLJNu" once="menu" id="menu1-0">
     <nav class="navbar navbar-expand beta-menu navbar-dropdown align-items-center navbar-fixed-top navbar-toggleable-sm">
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
-                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </button>
         <div class="menu-logo">
             <div class="navbar-brand">
                 <span class="navbar-logo">
@@ -34,7 +24,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link link text-white display-4" href="{% url 'home_url' %}">
+                    <a class="nav-link link text-white display-4" href="{% url 'mentor_list_url' %}">
                         Mentors
                     </a>
                 </li>
@@ -50,33 +40,25 @@
                 </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link link text-white display-4" href="{% url 'logout' %}">
-                            Logout
-                        </a>
+                        <a class="nav-link link text-white display-4" href="{% url 'password_change' %}">Change
+                            password</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link link text-white display-4" href="{% url 'logout' %}">Logout</a>
                     </li>
                 {% else %}
-{#                    <li class="nav-item">#}
-{#                        <div class="nav-link link text-white display-4" href="{% url 'login' %}">#}
-{#                            Sign in#}
-{#                        </div>#}
-{#                    </li>#}
-{#                    <li class="nav-item">#}
-{#                        <div class="nav-link link text-white display-4" href="{% url 'register' %}">#}
-{#                            Sign up#}
-{#                        </div>#}
-{#                    </li>#}
                     <li class="nav-item">
-                        <div onclick="document.getElementById('id01').style.display='block'">
-                            <button class="btn btn-success">
-                                Login
-                            </button>
-                        </div>
+                        <a class="nav-link link text-white display-4" href="{% url 'login' %}">
+                            Sign in
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link link text-white display-4" href="{% url 'register' %}">
+                            Sign up
+                        </a>
                     </li>
                 {% endif %}
-
             </ul>
         </div>
     </nav>
 </section>
-
-{% include 'registration/login.html' %}

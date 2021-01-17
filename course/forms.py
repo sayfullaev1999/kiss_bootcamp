@@ -7,13 +7,12 @@ from course.models import Course
 class CourseForm(forms.ModelForm):
     class Meta:
         model = Course
-        fields = ['name', 'info', 'slug', 'image', 'user']
+        fields = ['name', 'info', 'image', 'mentor']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'image': forms.FileInput(attrs={'class': 'form-control'}),
             'info': forms.Textarea(attrs={'class': 'form-control'}),
-            'slug': forms.TextInput(attrs={'class': 'form-control'}),
-            'user': forms.HiddenInput(attrs={'class': 'form-control'})
+            'Mentor': forms.SelectMultiple(attrs={'class': 'form-control'})
         }
 
     def clean_slug(self):

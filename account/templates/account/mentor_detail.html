@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+    <section class="features2 cid-slq0ZBExQm" id="features2-b">
+        <div class="container">
+            <div class="media-container-row">
+                <div class="card p-3 col-12 col-md-12 col-lg-12">
+                    <div class="card-wrapper">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="card-img">
+                                    <img src="{{ mentor.image.url }}" alt="">
+                                </div>
+                            </div>
+                            <div class="col-lg-9">
+                                <h2>{{ mentor.user.get_full_name }}</h2>
+                                <div class="card-box">
+                                    <p class="mbr-text mbr-fonts-style display-7">
+                                        {{ mentor.position }}-{{ mentor.info }}
+                                    </p>
+                                    <p>
+                                        {{ mentor.user.email }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

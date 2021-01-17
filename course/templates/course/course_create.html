@@ -5,15 +5,19 @@
 {% endblock %}
 
 {% block content %}
-    <form action="{% url 'course_create_url' %}" method="post">
-        {% csrf_token %}
-        {% for foo in form %}
-            {{ foo.label }}
-            <p>{{ foo }}</p>
-            {% if foo.errors %}
-                {{ foo.errors }}
-            {% endif %}
-        {% endfor %}
-        <button type="submit">Create</button>
-    </form>
+    <section class="features2 cid-slq0ZBExQm" id="features2-b">
+        <div class="container">
+              <form action="{% url 'course_create_url' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for foo in form %}
+                    {{ foo.label }}
+                    <p>{{ foo }}</p>
+                    {% if foo.errors %}
+                        {{ foo.errors }}
+                    {% endif %}
+                {% endfor %}
+                <button type="submit">Create</button>
+            </form>
+        </div>
+    </section>
 {% endblock %}

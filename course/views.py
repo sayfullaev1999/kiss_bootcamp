@@ -1,34 +1,37 @@
-from django.shortcuts import render
 from django.views.generic.base import View
+from django.views.generic.detail import DetailView
 
+from course.mixins import CourseCreateMixin, CourseUpdateMixin, CourseDeleteMixin
 from course.models import Course
-from general.mixins import ObjectDetailMixins, ObjectUpdateMixins, ObjectDeleteMixins, ObjectCreateMixins
 from course.forms import CourseForm
+from django.views.generic.list import ListView
 
 
-def course_list(request):
-    courses = Course.objects.all()
-    return render(request, "course/course_list.html", context={'courses': courses})
+class CourseList(ListView):
+    queryset = Course.objects.all()
+    context_object_name = 'courses'
+    template_name = 'course/course_list.html'
 
 
-class CourseDetail(ObjectDetailMixins, View):
+class CourseDetail(DetailView):
     model = Course
-    template = 'course/course_detail.html'
+    template_name = 'course/course_detail.html'
+    extra_context = {'is_course_mentor': True}
 
 
-class CourseCreate(ObjectCreateMixins, View):
+class CourseCreate(CourseCreateMixin, View):
     model = Course
-    model_form = CourseForm
-    template = 'course/course_create.html'
+    form_class = CourseForm
+    template_name = 'course/course_create.html'
 
 
-class CourseUpdate(ObjectUpdateMixins, View):
+class CourseUpdate(CourseUpdateMixin, View):
     model = Course
-    model_form = CourseForm
-    template = 'course/course_update.html'
+    form_class = CourseForm
+    template_name = 'course/course_update.html'
 
 
-class CourseDelete(ObjectDeleteMixins, View):
+class CourseDelete(CourseDeleteMixin, View):
     model = Course
-    template = 'course/course_delete.html'
-    redirect_url = 'course_list_url'
+    template_name = 'course/course_delete.html'
+    success_url = 'course_list_url'

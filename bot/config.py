@@ -10,13 +10,12 @@ else:
 
 class States(Enum):
     START = 0
-    LESSONS = 1
-    LESSON = 2
-    HOME_CONTACT = 10
+    COURSE = 10
+    HOME_CONTACT = 20
     SEND_CONTACT = 11
-    SEND_NAME = 12
-    TEACHER = 20
-    SEND_NEWS = 30
+    SEND_NAME = 30
+    MENTOR = 40
+    SEND_NEWS = 50
 
 
 DB_FILE = 'db.vdb'

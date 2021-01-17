@@ -5,14 +5,16 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <form action="{{ course.get_update_url }}" method="post">
-            {% csrf_token %}
-            {% for foo in form %}
-                {{ foo.label }}
-                <p>{{ foo }}</p>
-            {% endfor %}
-            <button type="submit">Save</button>
-        </form>
-    </div>
+    <section class="features2 cid-slq0ZBExQm" id="features2-b">
+        <div class="container">
+            <form class="card" action="{{ course.get_update_url }}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for foo in form %}
+                    {{ foo.label }}
+                    <p>{{ foo }}</p>
+                {% endfor %}
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </section>
 {% endblock %}

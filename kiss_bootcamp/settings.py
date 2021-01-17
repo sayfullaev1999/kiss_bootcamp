@@ -1,6 +1,7 @@
 import os
-from dotenv import load_dotenv
 from pathlib import Path
+
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_D  IR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -54,8 +55,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             BASE_DIR / 'templates',
-            BASE_DIR / 'account/templates'
-        ]
+            BASE_DIR / 'account/templates']
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -142,4 +142,5 @@ AUTH_USER_MODEL = 'account.User'
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
+    ALLOWED_HOSTS += os.getenv('ALLOWED_HOSTS')
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

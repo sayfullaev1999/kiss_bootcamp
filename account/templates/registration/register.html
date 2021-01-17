@@ -7,7 +7,7 @@
 {% block content %}
     <section class="features2 cid-slq0ZBExQm" id="features2-b">
     <div class="container">
-        <h1>This is registration page</h1>
+        <h1 class="text-center">This is registration page</h1>
             <form action="{% url 'register' %}" method="post">
                 {% csrf_token %}
                 {% for foo in form %}
@@ -20,8 +20,6 @@
                 {% endfor %}
                 <button type="submit">Register</button>
             </form>
-
     </div>
-
 </section>
 {% endblock %}

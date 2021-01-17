@@ -1,33 +1,24 @@
 import telebot
 import time
-from bot.models import Lesson, Teacher, Contact, Info, UserBot
+
+from account.models import Mentor, User
+from bot.models import Info, UserBot
 from bot.config import States, TOKEN
 from bot.dbworker import get_state, set_state
 from bot.static_content_bot import dct
+from course.models import Course, ContactUs
 
 bot = telebot.TeleBot(
     token=TOKEN
 )
 manager_id = 1112229231
-admin_id = 933705953
+admin_id = [933705953]
 
 
 @bot.message_handler(
-    func=lambda message: message.text in ['⬅️Orqaga', '🎛Asosiy Menyu', '⬅️Назад', '🎛Главное меню', '⬅️Back',
-                                          '🎛Main Menu'])
+    func=lambda message: message.text in ['🎛Asosiy Menyu', '🎛Главное меню', '🎛Main Menu'])
 def back(message):
-    user, _ = UserBot.objects.get_or_create(chat_id=message.chat.id, username=message.from_user.username)
-    state = get_state(key=message.chat.id)
-    if message.text == dct[user.language_bot]['⬅️Orqaga']:
-        state = state - 1
-    else:
-        state = 0
-    if state == 0:
-        start_message(message)
-    elif state == 1:
-        get_lessons_list(message)
-    elif state == 2:
-        get_lesson()
+    start_message(message)
 
 
 def get_markup_menu(chat_id, username):
@@ -48,6 +39,10 @@ def get_markup_menu(chat_id, username):
         telebot.types.KeyboardButton(text=dct[user.language_bot]["⚙️Tilni o'zgartirish"])
     ]
     markup.add(*buttons)
+    if chat_id in admin_id:
+        markup.add(
+            telebot.types.KeyboardButton(text=dct[user.language_bot]['✉ Yangilik yaratish']),
+        )
     return markup
 
 
@@ -60,39 +55,6 @@ def get_markup_change_language():
     ]
     markup.row(*buttons)
     return markup
-
-
-@bot.message_handler(commands=['start'])
-@bot.message_handler(
-    func=lambda message: get_state(key=message.chat.id) == States.START.value)
-def start_message(message):
-    set_state(
-        key=message.chat.id,
-        value=States.START.value
-    )
-
-    user, created = UserBot.objects.get_or_create(
-        chat_id=message.chat.id,
-        username=message.chat.username,
-    )
-    if created:
-        markup = get_markup_change_language()
-        bot.send_message(
-            chat_id=message.chat.id,
-            text='🇺🇿Iltimos tilni tanlang\n🇷🇺Пожалуйста выберите язык\n🇬🇧Please select a language',
-            reply_markup=markup,
-        )
-    else:
-        markup = get_markup_menu(message.chat.id, message.chat.username)
-        if message.chat.id == admin_id:
-            markup.add(
-                telebot.types.KeyboardButton(text=dct[user.language_bot]['✉ Yangilik yaratish']),
-            )
-        bot.send_message(
-            chat_id=message.chat.id,
-            text=dct[user.language_bot]['Menyu elementlaridan birini tanlang'],
-            reply_markup=markup
-        )
 
 
 @bot.callback_query_handler(func=lambda call: True and call.data in ['UZ', 'RU', 'EN'])
@@ -150,7 +112,7 @@ def send_news(text):
 
 @bot.message_handler(func=lambda message: message.text in ['✉ Yangilik yaratish', '✉ Добавить новость', '✉ Add News'])
 def add_news(message):
-    if message.chat.id == admin_id:
+    if message.chat.id in admin_id:
         user, _ = UserBot.objects.get_or_create(chat_id=message.chat.id, username=message.chat.username)
         set_state(
             key=message.chat.id,
@@ -179,22 +141,22 @@ def get_news(message):
     )
 
 
+# Начало
 @bot.message_handler(
-    func=lambda message: message.text in ["📚Kurslar", "📚Курсы", "📚Courses"] or get_state(
-        key=message.chat.id) == States.LESSONS.value)
-def get_lessons_list(message):
+    func=lambda message: message.text in ["📚Kurslar", "📚Курсы", "📚Courses"])
+def course_list(message):
     user, _ = UserBot.objects.get_or_create(chat_id=message.chat.id, username=message.chat.username)
     set_state(
         key=message.chat.id,
-        value=States.LESSON.value
+        value=States.COURSE.value
     )
-    lessons = Lesson.objects.all()
+    courses = Course.objects.all()
     markup = telebot.types.ReplyKeyboardMarkup(
         resize_keyboard=True
     )
     buttons = []
-    for lesson in lessons:
-        buttons.append(telebot.types.KeyboardButton(text=lesson.name))
+    for course in courses:
+        buttons.append(telebot.types.KeyboardButton(text=course.name))
     buttons.append(telebot.types.KeyboardButton(text=dct[user.language_bot]['🎛Asosiy Menyu']))
     markup.add(*buttons)
     bot.send_message(
@@ -204,47 +166,37 @@ def get_lessons_list(message):
     )
 
 
-@bot.message_handler(func=lambda message: get_state(key=message.chat.id) == States.LESSON.value)
-def get_lesson(message):
+@bot.message_handler(func=lambda message: get_state(key=message.chat.id) == States.COURSE.value)
+def course_detail(message):
     user, _ = UserBot.objects.get_or_create(chat_id=message.chat.id, username=message.chat.username)
-    set_state(
-        key=message.chat.id,
-        value=States.LESSON.value
-    )
     markup = telebot.types.ReplyKeyboardMarkup(
         resize_keyboard=True
     )
-    buttons = [
-        telebot.types.KeyboardButton(text=dct[user.language_bot]['⬅️Orqaga']),
-        telebot.types.KeyboardButton(text=dct[user.language_bot]['🎛Asosiy Menyu']),
-    ]
-    markup.add(*buttons)
     try:
-        lesson = Lesson.objects.get(name__iexact=message.text)
+        course = Course.objects.get(name__iexact=message.text)
         bot.send_photo(
             chat_id=message.chat.id,
-            photo=lesson.image,
-            caption=lesson.name + '\n' + lesson.info,
+            photo=course.image,
+            caption=course.name + '\n' + course.info,
             reply_markup=markup,
         )
-    except:
+    except Course.DoesNotExist:
         bot.send_message(
             chat_id=message.chat.id,
             text=dct[user.language_bot]["Menyu elementlaridan birini tanlang"]
         )
 
 
-@bot.message_handler(
-    func=lambda message: message.text in ["👨‍💻O'qituvchilar", "👨‍💻Учителя", "👨‍💻Mentors"])
-def get_teachers_list(message):
+@bot.message_handler(func=lambda message: message.text in ["👨‍💻O'qituvchilar", "👨‍💻Учителя", "👨‍💻Mentors"])
+def mentor_list(message):
     user, _ = UserBot.objects.get_or_create(chat_id=message.chat.id, username=message.chat.username)
-    teachers = Teacher.objects.all()
+    mentors = Mentor.objects.all()
     markup = telebot.types.ReplyKeyboardMarkup(
         resize_keyboard=True
     )
     buttons = []
-    for teacher in teachers:
-        buttons.append(telebot.types.KeyboardButton(text=teacher.name))
+    for mentor in mentors:
+        buttons.append(telebot.types.KeyboardButton(text=mentor.user.get_full_name()))
     buttons.append(telebot.types.KeyboardButton(text=dct[user.language_bot]['🎛Asosiy Menyu']))
     markup.add(*buttons)
     bot.send_message(
@@ -254,24 +206,25 @@ def get_teachers_list(message):
     )
     set_state(
         key=message.chat.id,
-        value=States.TEACHER.value
+        value=States.MENTOR.value
     )
 
 
-@bot.message_handler(func=lambda message: get_state(message.chat.id) == States.TEACHER.value)
-def get_teacher(message):
+@bot.message_handler(func=lambda message: get_state(message.chat.id) == States.MENTOR.value)
+def mentor_detail(message):
     user, _ = UserBot.objects.get_or_create(chat_id=message.chat.id, username=message.chat.username)
     try:
-        teacher = Teacher.objects.get(name__iexact=message.text)
+        first_name, last_name = message.text.split()
+        user = User.objects.get(first_name__iexact=first_name, last_name__iexact=last_name)
         bot.send_photo(
             chat_id=message.chat.id,
-            photo=teacher.image,
-            caption=teacher.name + '\n' + teacher.info + '\n' + '✉️ ' + teacher.email,
+            photo=user.mentor.image,
+            caption=user.get_full_name() + '\n' + user.mentor.info + '\n' + user.email,
         )
-    except:
+    except Mentor.DoesNotExist or ValueError:
         bot.send_message(
             chat_id=message.chat.id,
-            text=dct[user.language_bot]['Iltimos ro`yhatdaki o`qituvchilardan birini tanlang!']
+            text=dct[user.language_bot]['Iltimos ro`yhatdaki o`qituvchilardan birini tanlang']
         )
 
 
@@ -304,7 +257,9 @@ def get_info(message):
     )
 
 
-contact_us = Contact()
+# Конец
+
+contact_us = ContactUs()
 
 
 @bot.message_handler(
@@ -312,34 +267,43 @@ contact_us = Contact()
 def contact_as(message):
     user, _ = UserBot.objects.get_or_create(chat_id=message.chat.id, username=message.chat.username)
     try:
-        obj = Contact.objects.get(
-            chat_id=message.chat.id
+        obj = ContactUs.objects.get(
+            chat_id=message.chat.id,
         )
         set_state(
             key=message.chat.id,
             value=States.START.value
         )
-        text = dct[user.language_bot]['Arizangiz uchun rahmat, menedjerlarimiz siz bilan tez orada bog`lanishadi.']
-        if not obj.check_box:
-            text = dct[user.language_bot][
-                'Sizning so`rovingiz ko`rib chiqilmoqda, iltimos menedjerlar qo`ng`iroqini kuting']
+        if obj.check_box:
+            obj.check_box = False
+            obj.save()
+            bot.send_message(
+                chat_id=message.chat.id,
+                text=dct[user.language_bot][
+                    'Arizangiz uchun rahmat, menedjerlarimiz siz bilan tez orada bog`lanishadi.']
+            )
+            bot.send_message(
+                chat_id=manager_id,
+                text='Name: ' + obj.full_name + '\n' + 'Phone number: ' + obj.phone_number + '\n' + 'Course: ' + str(
+                    obj.course.name) + '\n' + 'Date: ' + str(obj.date)[:20]
+            )
+            start_message(message)
         else:
-            contact_us.check_box = False
-        obj.save()
-        bot.send_message(
-            chat_id=message.chat.id,
-            text=text
-        )
-    except:
+            bot.send_message(
+                chat_id=message.chat.id,
+                text=dct[user.language_bot][
+                    'Sizning so`rovingiz ko`rib chiqilmoqda, iltimos menedjerlar qo`ng`iroqini kuting']
+            )
+    except ContactUs.DoesNotExist:
         contact_us.chat_id = message.chat.id
         keyboard = telebot.types.ReplyKeyboardMarkup(
             resize_keyboard=True,
             one_time_keyboard=True
         )
         buttons = [
-            telebot.types.KeyboardButton(text=dct[user.language_bot]['🎛Asosiy Menyu']),
             telebot.types.KeyboardButton(text=dct[user.language_bot]["📱Telefon raqamimni yuborish"],
-                                         request_contact=True)
+                                         request_contact=True),
+            telebot.types.KeyboardButton(text=dct[user.language_bot]['🎛Asosiy Menyu'])
         ]
         keyboard.add(*buttons)
         bot.send_message(
@@ -395,11 +359,11 @@ def send_name(message):
         )
         return
 
-    contact_us.name = message.text
+    contact_us.full_name = message.text
     markup = telebot.types.InlineKeyboardMarkup()
-    lessons_lists = Lesson.objects.all()
-    for lesson in lessons_lists:
-        markup.row(telebot.types.InlineKeyboardButton(text=lesson.name, callback_data=lesson.name))
+    courses = Course.objects.all()
+    for course in courses:
+        markup.row(telebot.types.InlineKeyboardButton(text=course.name, callback_data=course.name))
     bot.send_message(
         chat_id=message.chat.id,
         text=dct[user.language_bot]["Qaysi kursga a'zo bo'lmoqchisiz?"],
@@ -408,20 +372,20 @@ def send_name(message):
 
 
 @bot.callback_query_handler(func=lambda call: True)
-def cho_lesson(call):
+def cho_course(call):
     user, _ = UserBot.objects.get_or_create(chat_id=call.from_user.id, username=call.from_user.username)
-    contact_us.lesson_id = Lesson.objects.get(name=call.data).pk
+    contact_us.course_id = Course.objects.get(name=call.data).pk
     bot.delete_message(chat_id=call.from_user.id, message_id=call.message.id)
     bot.send_message(
         chat_id=call.from_user.id,
         text=dct[user.language_bot]['Arizangiz uchun rahmat, menedjerlarimiz siz bilan tez orada bog`lanishadi.']
     )
     contact_us.save()
-    obj = Contact.objects.get(chat_id=contact_us.chat_id)
+    obj = ContactUs.objects.get(chat_id=contact_us.chat_id)
     bot.send_message(
         chat_id=manager_id,
-        text='Name: ' + obj.name + '\n' + 'Phone number: ' + obj.phone_number + '\n' + 'Course: ' + str(
-            obj.lesson) + '\n' + 'Date: ' + str(obj.date)[:20]
+        text='Name: ' + obj.full_name + '\n' + 'Phone number: ' + obj.phone_number + '\n' + 'Course: ' + str(
+            obj.course.name) + '\n' + 'Date: ' + str(obj.date)[:20]
     )
     start_message(call.message)
 
@@ -436,3 +400,31 @@ def language_change(message):
         text=dct[user.language_bot]['🇺🇿Iltimos tilni tanlang'],
         reply_markup=markup,
     )
+
+
+@bot.message_handler(commands=['start'])
+@bot.message_handler(func=lambda message: get_state(key=message.chat.id) == States.START.value)
+def start_message(message):
+    set_state(
+        key=message.chat.id,
+        value=States.START.value
+    )
+    user, created = UserBot.objects.get_or_create(
+        chat_id=message.chat.id,
+        username=message.chat.username,
+    )
+    if created:
+        markup = get_markup_change_language()
+        bot.send_message(
+            chat_id=message.chat.id,
+            text='🇺🇿Iltimos tilni tanlang\n🇷🇺Пожалуйста выберите язык\n🇬🇧Please select a language',
+            reply_markup=markup,
+        )
+        return
+    else:
+        markup = get_markup_menu(message.chat.id, message.chat.username)
+        bot.send_message(
+            chat_id=message.chat.id,
+            text=dct[user.language_bot]['Menyu elementlaridan birini tanlang'],
+            reply_markup=markup
+        )

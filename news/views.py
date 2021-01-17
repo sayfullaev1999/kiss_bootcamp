@@ -1,36 +1,35 @@
-from django.shortcuts import render
-from django.views.generic import View
-from general.generators import gen_paginator
+from django.views.generic import View, DetailView
+from django.views.generic.list import ListView
 
+from news.mixins import NewsUpdateMixin, NewsCreateMixin, NewsDeleteMixin
 from news.models import News
 from news.forms import NewsForm
-from general.mixins import ObjectDetailMixins, ObjectCreateMixins, ObjectUpdateMixins, ObjectDeleteMixins
 
 
-def news_list(request):
-    news = News.objects.all()
-    context = gen_paginator(request, news, 4)
-    return render(request, template_name='news/news_list.html', context=context)
+class NewsList(ListView):
+    queryset = News.objects.all()
+    paginate_by = 1
+    template_name = 'news/news_list.html'
 
 
-class NewsDetail(ObjectDetailMixins, View):
+class NewsDetail(DetailView):
     model = News
-    template = 'news/news_detail.html'
+    template_name = 'news/news_detail.html'
 
 
-class NewsCreate(ObjectCreateMixins, View):
+class NewsCreate(NewsCreateMixin, View):
     model = News
-    model_form = NewsForm
-    template = 'news/news_create.html'
+    form_class = NewsForm
+    template_name = 'news/news_create.html'
 
 
-class NewsUpdate(ObjectUpdateMixins, View):
+class NewsUpdate(NewsUpdateMixin, View):
     model = News
-    model_form = NewsForm
-    template = 'news/news_update.html'
+    form_class = NewsForm
+    template_name = 'news/news_update.html'
 
 
-class NewsDelete(ObjectDeleteMixins, View):
+class NewsDelete(NewsDeleteMixin, View):
     model = News
-    template = 'news/news_delete.html'
-    redirect_url = 'news_list_url'
+    template_name = 'news/news_delete.html'
+    success_url = 'news_list_url'
