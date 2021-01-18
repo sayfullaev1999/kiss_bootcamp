@@ -2,7 +2,7 @@ import telebot
 import time
 
 from account.models import Mentor, User
-from bot.models import Info, UserBot
+from bot.models import UserBot
 from bot.config import States, TOKEN
 from bot.dbworker import get_state, set_state
 from bot.static_content_bot import dct
@@ -12,7 +12,7 @@ bot = telebot.TeleBot(
     token=TOKEN
 )
 manager_id = 1112229231
-admin_id = [933705953]
+admin_id = [933705953, 536563573]
 
 
 @bot.message_handler(
@@ -39,6 +39,9 @@ def get_markup_menu(chat_id, username):
         telebot.types.KeyboardButton(text=dct[user.language_bot]["⚙️Tilni o'zgartirish"])
     ]
     markup.add(*buttons)
+    markup.add(
+        telebot.types.KeyboardButton(text=dct[user.language_bot]['📧Adminga murojat'])
+    )
     if chat_id in admin_id:
         markup.add(
             telebot.types.KeyboardButton(text=dct[user.language_bot]['✉ Yangilik yaratish']),
@@ -73,6 +76,38 @@ def lang(call):
         text=dct[user.language_bot]['Menyu elementlaridan birini tanlang'],
         reply_markup=markup
     )
+
+
+@bot.message_handler(
+    func=lambda message: message.text in ['📧Adminga murojat', '📧Связатся с администратором', '📧Contact with admin'])
+def contact_admin(message):
+    user, _ = UserBot.objects.get_or_create(chat_id=message.chat.id, username=message.chat.username)
+    set_state(
+        key=message.chat.id,
+        value=States.CONTACT_ADMIN.value
+    )
+    bot.send_message(
+        chat_id=message.chat.id,
+        text=dct[user.language_bot][
+            "Ushbu bo'limda siz fikr va takliflaringizni administratorga qoldirishingiz mumkin.\nFikr va taklifaringizni yozib qoldiring."
+        ]
+    )
+
+
+@bot.message_handler(func=lambda message: get_state(key=message.chat.id) == States.CONTACT_ADMIN.value)
+def message_contact_admin(message):
+    user, _ = UserBot.objects.get_or_create(chat_id=message.chat.id, username=message.chat.username)
+    bot.send_message(
+        chat_id=message.chat.id,
+        text=dct[user.language_bot][
+            "Xabar muvaffaqiyatli qo'shildi✅\n\nLoyihamizni rivojlantirishga qo'shgan hissangiz uchun tashakkur."]
+    )
+    for item in admin_id:
+        bot.send_message(
+            chat_id=item,
+            text="@" + message.chat.username + "\n" + message.text
+        )
+    start_message(message)
 
 
 @bot.callback_query_handler(func=lambda call: True and call.data in ['cancel', 'send'])
@@ -247,13 +282,23 @@ def get_location(message):
 
 @bot.message_handler(func=lambda message: message.text in ["ℹ️Biz haqimizda", "ℹО нас", "ℹ️About Us"])
 def get_info(message):
-    info = Info.objects.all()
-    text = ""
-    for item in info:
-        text = text + item.text + '\n'
+    user, _ = UserBot.objects.get_or_create(chat_id=message.chat.id, username=message.chat.username)
+    text ="""
+        KISS – Khorezm Innovations and Software Solutions
+        
+        IT-Academy (Bootcamp)
+        
+        Xozirgi kunda “KISS – Khorezm Innovations and Software Solutions” MJCH tomonidan turli sohalar uchun dasturiy ta`minotlar yaratilmoqda, jamiyat hodimlari turli xalqaro firma va kompaniyalar uchun ishlab (Outsourcing, Freelancing) kelishmoqda. Shuningdek, dasturlashni  xalqaro darajada o`rgatuvchi IT-akademiya tashkil qilingan bo`lib u yerda talabalar va o`rganuvchilar turli hil dasturlash texnologiyalarini o`rgangan holda turli hil dasturiy loyihalar amalga oshirishni o`rganishmoqda. Markazda dasturlashni o`rgatish ingliz tilida va dasturiy ta`minotlar yaratish xalqaro standartlar asosida tashkil etilgan.
+        
+        Jamiyat xodimlarining 8 tasi chet el firma va kompaniyalari uchun masofadan turib dasturchi sifatida ishlab kelishmoqda. Jamiyatda tashkil qilingan IT-akademiyada esa Web dasturlash (PHP, JavaScript, Laravel, Yii2, Django, vhk), Algoritmlash, Dasturiy loyixalarni boshqarish (Proyekt Menejment), Java tilida dasturlash (Spring Boot) va Mobil qurilmalar uchun dasturiy ta`minotlar yaratish (Android, React Native, iOS), Python tilida dasturlash va Robotatexnika dasturlash (IoT – Internet of Things) yo`nalishlarida o`quv kurslari tashkil etilgan.    
+        
+        E`tiborga loyiqi shundan iboratki, barcha kurslarda allaqachon chet el kompaniyalarida ishlayotgan, ko`p yillik tajribaga ega, PhD (Doctor of Phylosophy) va magistr darajasiga ega bo`lgan hamda chet elda tajriba orttirib kelgan mutaxassislar tomonidan o`qitish tashkil etilgan. Bunda, mashg`ulotlar «Birinchi, Muammo (Problem First)» va «bajarish orqali o`rganish (Learning by Doing)» prinsipi asosida o`tiladi. Kurslar bitiruvchilarini Senior darajasidagi dasturchilar bo`lib yetishadi va ularni kompaniya va firmalarga dasturchi sifatida ishga joylash bo`yicha amaliy yordam beriladi.
+        
+        “KISS – Khorezm Innovations and Software Solutions” MCHJ "IT-PARK UZBEKISTAN"  rezidenti hisoblanadi.
+        """
     bot.send_message(
         chat_id=message.chat.id,
-        text=text
+        text=dct[user.language_bot][text]
     )
 
 

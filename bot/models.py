@@ -2,18 +2,6 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-class Info(models.Model):
-    """
-    The Info model
-    """
-
-    text = models.TextField(_('information'))
-
-    class Meta:
-        verbose_name = _('info')
-        verbose_name_plural = _('info')
-
-
 class UserBot(models.Model):
     """
     The UserBot model

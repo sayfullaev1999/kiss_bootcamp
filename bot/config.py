@@ -16,6 +16,7 @@ class States(Enum):
     SEND_NAME = 30
     MENTOR = 40
     SEND_NEWS = 50
+    CONTACT_ADMIN = 60
 
 
 DB_FILE = 'db.vdb'

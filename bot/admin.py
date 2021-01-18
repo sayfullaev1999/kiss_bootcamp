@@ -1,10 +1,5 @@
 from django.contrib import admin
-from .models import Info, UserBot
-
-
-@admin.register(Info)
-class InfoAdmin(admin.ModelAdmin):
-    list_display = ('id',)
+from .models import UserBot
 
 
 @admin.register(UserBot)
