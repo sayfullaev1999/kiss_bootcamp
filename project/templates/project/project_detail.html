@@ -1,50 +1,40 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {{ project.name|title }} - {{ block.super }}
+{% endblock %}
 
 {% block content %}
     <section class="features2 cid-slq0ZBExQm" id="features2-b">
         <div class="container">
-            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                {% if user.is_superuser %}
-                    <div class="btn-group mr-2" role="group" aria-label="First group">
-                        <a href="{{ news.get_update_url }}">
-                            <button type="button" class="btn btn-primary">Update</button>
-                        </a>
-                    </div>
-                    <div class="btn-group mr-2" role="group" aria-label="Second group">
-                        <a href="{{ news.get_delete_url }}">
-                            <button type="button" class="btn btn-secondary">Delete</button>
-                        </a>
-                    </div>
-                {% endif %}
-            </div>
             <div class="media-container-row">
                 <div class="card p-3 col-12 col-md-12 col-lg-12">
                     <div class="card-wrapper">
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="card-img">
-                                    <img src="{{ news.image.url }}" alt="">
+                                    <img src="{{ project.image.url }}" alt="">
                                 </div>
                             </div>
                             <div class="col-lg-9">
-                                <h2>{{ news.title }}</h2>
+                                <h2>{{ project.name }}</h2>
                                 <div class="card-box">
                                     <p class="mbr-text mbr-fonts-style display-7">
-                                        {{ news.body }}
-
+                                        {{ project.info }}
                                     </p>
                                 </div>
                                 <div class="card-box text-lg-right">
-                                    {{ news.date_pub|date:'Y-m-n' }}
+                                    {% for obj in object.users.values %}
+                                        <a href="{{ obj.get_absolute_url }}">{{ obj.username }}</a>
+                                        <br>
+                                    {% endfor %}
                                 </div>
-
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
     </section>
 {% endblock %}

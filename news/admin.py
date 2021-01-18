@@ -1,7 +1,7 @@
 from django.contrib import admin, messages
 from django.utils.translation import ngettext
 
-from news.models import News, Project
+from news.models import News
 
 
 @admin.register(News)
@@ -32,13 +32,3 @@ class NewsAdmin(admin.ModelAdmin):
 
     make_active.short_description = "Mark selected news as active"
     make_not_active.short_description = "Mark selected news as not active"
-
-
-@admin.register(Project)
-class ProjectAdmin(admin.ModelAdmin):
-    readonly_fields = ('slug',)
-    fields = ('name', 'image', 'info', 'users', 'site', 'slug')
-    search_fields = ('name', 'site')
-    filter_horizontal = ('users',)
-    list_display = ('name', 'site')
-    list_filter = ('users',)

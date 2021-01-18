@@ -9,7 +9,9 @@ urlpatterns = [
     path('news/', include('news.urls')),
     path('bot/', include('bot.urls')),
     path('accounts/', include('account.urls')),
-    path('course/', include('course.urls'))]
+    path('course/', include('course.urls')),
+    path('project/', include('project.urls')),
+]
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL,

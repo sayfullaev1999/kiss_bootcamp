@@ -2,7 +2,6 @@ from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from account.models import User
 from general.generators import gen_slug
 
 
@@ -71,42 +70,3 @@ class News(models.Model):
         return self.title
 
 
-class Project(models.Model):
-    """
-    The Project model which is related to the User model ManyToMany.
-    All fields are required
-    """
-    name = models.CharField(_('name'), max_length=150)
-    info = models.TextField(_('information'))
-    image = models.ImageField(_('image'))
-    users = models.ManyToManyField(User, related_name='projects', verbose_name='user')
-    slug = models.SlugField(
-        _('URL'),
-        max_length=255,
-        unique=True,
-        help_text=_('Human-readable URLs'),
-        error_messages={
-            'unique': _('A course with that slug already exists.'),
-        }
-    )
-    site = models.URLField(_('web site'), max_length=150, blank=True, help_text=_('A web site of project'))
-
-    def save(self, *args, **kwargs):
-        """
-        Generating a slug for the object before saving
-        """
-        if not self.id:
-            # We use name as a slug
-            self.slug = self.name.lower()
-        # Calling the parent method
-        super().save(*args, **kwargs)
-
-    class Meta:
-        verbose_name = _('project')
-        verbose_name_plural = _('projects')
-
-    def __str__(self):
-        """
-        Return the project name .
-        """
-        return self.name
