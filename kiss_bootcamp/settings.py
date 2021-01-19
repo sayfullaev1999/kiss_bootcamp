@@ -19,7 +19,8 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv('DEBUG')
 
 ALLOWED_HOSTS = [
-
+    '185.195.27.17',
+    'kiss-group.uz',
 ]
 
 # Application definition
