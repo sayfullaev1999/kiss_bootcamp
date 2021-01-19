@@ -55,8 +55,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             BASE_DIR / 'templates',
-            BASE_DIR / 'account/templates']
-        ,
+            BASE_DIR / 'account/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -142,5 +141,6 @@ AUTH_USER_MODEL = 'account.User'
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
-    ALLOWED_HOSTS += os.getenv('ALLOWED_HOSTS')
+    ALLOWED_HOSTS.append(os.getenv('IP'))
+    ALLOWED_HOSTS.append(os.getenv('DOMAIN'))
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
