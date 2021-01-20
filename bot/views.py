@@ -1,6 +1,6 @@
 from telebot import types
 from django.http import HttpRequest
-from bot import bot
+from bot.bot import bot
 
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
