@@ -134,3 +134,8 @@ nbproject
 .buildpath
 .project
 .settings
+*/__pycache__/*
+
+
+#staticfiles server
+*/staticfiles/*

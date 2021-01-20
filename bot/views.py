@@ -1,16 +1,16 @@
-from telebot import types
-from django.http import HttpRequest
-from bot.bot import bot
-
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
+from django.views.generic.base import View
+from telebot import types
+from .bot import bot
 
 
-@csrf_exempt
-def index(request: HttpRequest):
-    # Сюда должны получать сообщения от телеграм и далее обрабатываться ботом
-    json_str = request.body.decode('UTF-8')
-    update = types.Update.de_json(json_str)
-    bot.process_new_updates([update])
+class Bot(View):
+    def get(self, request):
+        raise PermissionDenied()
 
-    return HttpResponse()
+    def post(self, request):
+        json_str = request.body.decode('UTF-8')
+        update = types.Update.de_json(json_str)
+        bot.process_new_updates([update])
+        return HttpResponse('<h1>Success</h1>')
