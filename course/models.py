@@ -11,7 +11,7 @@ class Course(models.Model):
     """
     name = models.CharField(
         _('name'),
-        max_length=30,
+        max_length=150,
         unique=True,
         error_messages={
             'unique': _('A course with that name already exists.'),
