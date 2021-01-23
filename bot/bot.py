@@ -11,7 +11,7 @@ from course.models import Course, ContactUs
 bot = telebot.TeleBot(
     token=TOKEN
 )
-manager_id = 933705953
+manager_id = 1013917463
 admin_id = [933705953, 536563573]
 
 
