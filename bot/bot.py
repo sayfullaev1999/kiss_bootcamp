@@ -117,7 +117,7 @@ def message_contact_admin(message):
         text = 'id:' + str(message.chat.id)
         if user.username != 'None':
             text += '\nusername: @' + str(user.username)
-        text+='\ntext: ' + message.text
+        text += '\ntext: ' + message.text
         bot.send_message(
             chat_id=item,
             text=text
@@ -358,7 +358,7 @@ def contact_as(message):
                     'Sizning so`rovingiz ko`rib chiqilmoqda, iltimos menedjerlar qo`ng`iroqini kuting']
             )
     except ContactUs.DoesNotExist:
-        contact_us.pk = message.chat.id
+        contact_us = ContactUs()
         contact_us.chat_id = message.chat.id
         keyboard = telebot.types.ReplyKeyboardMarkup(
             resize_keyboard=True,
