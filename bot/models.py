@@ -7,7 +7,7 @@ class UserBot(models.Model):
     The UserBot model
     """
     chat_id = models.PositiveIntegerField(_('ID'), unique=True, help_text=_('telegram user id'))
-    username = models.CharField(_('username'), max_length=33, blank=True)
+    username = models.CharField(_('username'), max_length=33, blank=True, default='None')
     language_bot = models.CharField(_('language'), max_length=2, default='UZ')
 
     def __str__(self):

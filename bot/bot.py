@@ -11,8 +11,19 @@ from course.models import Course, ContactUs
 bot = telebot.TeleBot(
     token=TOKEN
 )
-manager_id = 1112229231
+manager_id = 933705953
 admin_id = [933705953, 536563573]
+
+
+def get_user(chat_id, username):
+    user, _ = UserBot.objects.get_or_create(chat_id=chat_id)
+
+    if username != user.username:
+        if username is None:
+            username = 'None'
+        user.username = username
+        user.save()
+    return user, _
 
 
 @bot.message_handler(
@@ -22,7 +33,7 @@ def back(message):
 
 
 def get_markup_menu(chat_id, username):
-    user, _ = UserBot.objects.get_or_create(chat_id=chat_id, username=username)
+    user, _ = get_user(chat_id, username)
     markup = telebot.types.ReplyKeyboardMarkup(
         resize_keyboard=True
     )
@@ -62,7 +73,7 @@ def get_markup_change_language():
 
 @bot.callback_query_handler(func=lambda call: True and call.data in ['UZ', 'RU', 'EN'])
 def lang(call):
-    user, _ = UserBot.objects.get_or_create(chat_id=call.from_user.id, username=call.from_user.username)
+    user, _ = get_user(call.from_user.id, call.from_user.username)
     user.language_bot = call.data
     user.save()
     bot.delete_message(chat_id=call.from_user.id, message_id=call.message.id)
@@ -81,7 +92,7 @@ def lang(call):
 @bot.message_handler(
     func=lambda message: message.text in ['📧Adminga murojat', '📧Связатся с администратором', '📧Contact with admin'])
 def contact_admin(message):
-    user, _ = UserBot.objects.get_or_create(chat_id=message.chat.id, username=message.chat.username)
+    user, _ = get_user(message.chat.id, message.chat.username)
     set_state(
         key=message.chat.id,
         value=States.CONTACT_ADMIN.value
@@ -96,7 +107,7 @@ def contact_admin(message):
 
 @bot.message_handler(func=lambda message: get_state(key=message.chat.id) == States.CONTACT_ADMIN.value)
 def message_contact_admin(message):
-    user, _ = UserBot.objects.get_or_create(chat_id=message.chat.id, username=message.chat.username)
+    user, _ = get_user(message.chat.id, message.chat.username)
     bot.send_message(
         chat_id=message.chat.id,
         text=dct[user.language_bot][
@@ -112,7 +123,7 @@ def message_contact_admin(message):
 
 @bot.callback_query_handler(func=lambda call: True and call.data in ['cancel', 'send'])
 def correct_news(call):
-    user, _ = UserBot.objects.get_or_create(chat_id=call.from_user.id, username=call.from_user.username)
+    user, _ = get_user(call.from_user.id, call.from_user.username)
     bot.delete_message(chat_id=call.from_user.id, message_id=call.message.id)
     markup = get_markup_menu(call.from_user.id, call.from_user.username)
     if call.from_user.id == admin_id:
@@ -138,17 +149,20 @@ def correct_news(call):
 def send_news(text):
     users = UserBot.objects.all()
     for item in users:
-        bot.send_message(
-            chat_id=item.chat_id,
-            text=text
-        )
-        time.sleep(0.05)
+        try:
+            bot.send_message(
+                chat_id=item.chat_id,
+                text=text
+            )
+            time.sleep(0.05)
+        except Exception:
+            pass
 
 
 @bot.message_handler(func=lambda message: message.text in ['✉ Yangilik yaratish', '✉ Добавить новость', '✉ Add News'])
 def add_news(message):
     if message.chat.id in admin_id:
-        user, _ = UserBot.objects.get_or_create(chat_id=message.chat.id, username=message.chat.username)
+        user, _ = get_user(message.chat.id, message.chat.username)
         set_state(
             key=message.chat.id,
             value=States.SEND_NEWS.value
@@ -162,7 +176,7 @@ def add_news(message):
 
 @bot.message_handler(func=lambda message: get_state(key=message.chat.id) == States.SEND_NEWS.value)
 def get_news(message):
-    user, _ = UserBot.objects.get_or_create(chat_id=message.chat.id, username=message.chat.username)
+    user, _ = get_user(message.chat.id, message.chat.username)
     markup = telebot.types.InlineKeyboardMarkup()
     buttons = [
         telebot.types.InlineKeyboardButton(text=dct[user.language_bot]['Bekor qilish❌'], callback_data='cancel'),
@@ -180,7 +194,7 @@ def get_news(message):
 @bot.message_handler(
     func=lambda message: message.text in ["📚Kurslar", "📚Курсы", "📚Courses"])
 def course_list(message):
-    user, _ = UserBot.objects.get_or_create(chat_id=message.chat.id, username=message.chat.username)
+    user, _ = get_user(message.chat.id, message.chat.username)
     set_state(
         key=message.chat.id,
         value=States.COURSE.value
@@ -203,7 +217,7 @@ def course_list(message):
 
 @bot.message_handler(func=lambda message: get_state(key=message.chat.id) == States.COURSE.value)
 def course_detail(message):
-    user, _ = UserBot.objects.get_or_create(chat_id=message.chat.id, username=message.chat.username)
+    user, _ = get_user(message.chat.id, message.chat.username)
     markup = telebot.types.ReplyKeyboardMarkup(
         resize_keyboard=True
     )
@@ -224,7 +238,7 @@ def course_detail(message):
 
 @bot.message_handler(func=lambda message: message.text in ["👨‍💻O'qituvchilar", "👨‍💻Учителя", "👨‍💻Mentors"])
 def mentor_list(message):
-    user, _ = UserBot.objects.get_or_create(chat_id=message.chat.id, username=message.chat.username)
+    user, _ = get_user(message.chat.id, message.chat.username)
     mentors = Mentor.objects.all()
     markup = telebot.types.ReplyKeyboardMarkup(
         resize_keyboard=True
@@ -247,7 +261,7 @@ def mentor_list(message):
 
 @bot.message_handler(func=lambda message: get_state(message.chat.id) == States.MENTOR.value)
 def mentor_detail(message):
-    user, _ = UserBot.objects.get_or_create(chat_id=message.chat.id, username=message.chat.username)
+    user, _ = get_user(message.chat.id, message.chat.username)
     try:
         first_name, last_name = message.text.split()
         user = User.objects.get(first_name__iexact=first_name, last_name__iexact=last_name)
@@ -265,7 +279,7 @@ def mentor_detail(message):
 
 @bot.message_handler(func=lambda message: message.text in ["📍Manzilimiz", "📍Наш адресс", "📍Address"])
 def get_location(message):
-    user, _ = UserBot.objects.get_or_create(chat_id=message.chat.id, username=message.chat.username)
+    user, _ = get_user(message.chat.id, message.chat.username)
     latitude = 41.538737
     longitude = 60.633833
     bot.send_location(
@@ -282,8 +296,8 @@ def get_location(message):
 
 @bot.message_handler(func=lambda message: message.text in ["ℹ️Biz haqimizda", "ℹО нас", "ℹ️About Us"])
 def get_info(message):
-    user, _ = UserBot.objects.get_or_create(chat_id=message.chat.id, username=message.chat.username)
-    text ="""
+    user, _ = get_user(message.chat.id, message.chat.username)
+    text = """
         KISS – Khorezm Innovations and Software Solutions
         
         IT-Academy (Bootcamp)
@@ -310,7 +324,7 @@ contact_us = ContactUs()
 @bot.message_handler(
     func=lambda message: message.text in ["📱Biz bilan bog'lanish", "📱Связаться с нами", "📱Contact Us"])
 def contact_as(message):
-    user, _ = UserBot.objects.get_or_create(chat_id=message.chat.id, username=message.chat.username)
+    user, _ = get_user(message.chat.id, message.chat.username)
     try:
         obj = ContactUs.objects.get(
             chat_id=message.chat.id,
@@ -340,6 +354,10 @@ def contact_as(message):
                     'Sizning so`rovingiz ko`rib chiqilmoqda, iltimos menedjerlar qo`ng`iroqini kuting']
             )
     except ContactUs.DoesNotExist:
+        try:
+            contact_us.pk = ContactUs.objects.last().pk + 1
+        except:
+            contact_us.pk = message.chat.id
         contact_us.chat_id = message.chat.id
         keyboard = telebot.types.ReplyKeyboardMarkup(
             resize_keyboard=True,
@@ -365,7 +383,7 @@ def contact_as(message):
 @bot.message_handler(content_types=['contact'],
                      func=lambda message: get_state(message.chat.id) == States.SEND_CONTACT.value)
 def send_contact(message):
-    user, _ = UserBot.objects.get_or_create(chat_id=message.chat.id, username=message.chat.username)
+    user, _ = get_user(message.chat.id, message.chat.username)
     if message.chat.id != message.contact.user_id:
         bot.send_message(
             chat_id=message.chat.id,
@@ -396,7 +414,7 @@ def check_name(name):
 
 @bot.message_handler(func=lambda message: get_state(message.chat.id) == States.SEND_NAME.value)
 def send_name(message):
-    user, _ = UserBot.objects.get_or_create(chat_id=message.chat.id, username=message.chat.username)
+    user, _ = get_user(message.chat.id, message.chat.username)
     if message.content_type != 'text' or not check_name(message.text):
         bot.send_message(
             chat_id=message.chat.id,
@@ -418,8 +436,8 @@ def send_name(message):
 
 @bot.callback_query_handler(func=lambda call: True)
 def cho_course(call):
-    user, _ = UserBot.objects.get_or_create(chat_id=call.from_user.id, username=call.from_user.username)
-    contact_us.course_id = Course.objects.get(name=call.data).pk
+    user, _ = get_user(call.from_user.id, call.from_user.username)
+    contact_us.course = Course.objects.get(name=call.data)
     bot.delete_message(chat_id=call.from_user.id, message_id=call.message.id)
     bot.send_message(
         chat_id=call.from_user.id,
@@ -438,7 +456,7 @@ def cho_course(call):
 @bot.message_handler(
     func=lambda message: message.text in ["⚙️Tilni o'zgartirish", "⚙️Изменить язык", "⚙️Change the language"])
 def language_change(message):
-    user, _ = UserBot.objects.get_or_create(chat_id=message.chat.id, username=message.chat.username)
+    user, _ = get_user(message.chat.id, message.chat.username)
     markup = get_markup_change_language()
     bot.send_message(
         chat_id=message.chat.id,
@@ -454,10 +472,7 @@ def start_message(message):
         key=message.chat.id,
         value=States.START.value
     )
-    user, created = UserBot.objects.get_or_create(
-        chat_id=message.chat.id,
-        username=message.chat.username,
-    )
+    user, created = get_user(message.chat.id, message.chat.username)
     if created:
         markup = get_markup_change_language()
         bot.send_message(

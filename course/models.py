@@ -85,7 +85,7 @@ class ContactUs(models.Model):
     full_name = models.CharField(_('full name'), max_length=150)
 
     phone_number = models.CharField(_('phone number'), max_length=13)
-    course = models.OneToOneField(
+    course = models.ForeignKey(
         Course,
         on_delete=models.CASCADE,
         related_name='contact_us',
