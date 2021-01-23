@@ -114,9 +114,13 @@ def message_contact_admin(message):
             "Xabar muvaffaqiyatli qo'shildi✅\n\nLoyihamizni rivojlantirishga qo'shgan hissangiz uchun tashakkur."]
     )
     for item in admin_id:
+        text = 'id:' + str(message.chat.id)
+        if user.username != 'None':
+            text += '\nusername: @' + str(user.username)
+        text+='\ntext: ' + message.text
         bot.send_message(
             chat_id=item,
-            text="@" + message.chat.username + "\n" + message.text
+            text=text
         )
     start_message(message)
 
@@ -354,10 +358,7 @@ def contact_as(message):
                     'Sizning so`rovingiz ko`rib chiqilmoqda, iltimos menedjerlar qo`ng`iroqini kuting']
             )
     except ContactUs.DoesNotExist:
-        try:
-            contact_us.pk = ContactUs.objects.last().pk + 1
-        except:
-            contact_us.pk = message.chat.id
+        contact_us.pk = message.chat.id
         contact_us.chat_id = message.chat.id
         keyboard = telebot.types.ReplyKeyboardMarkup(
             resize_keyboard=True,
