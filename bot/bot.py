@@ -11,7 +11,8 @@ from course.models import Course, ContactUs
 bot = telebot.TeleBot(
     token=TOKEN
 )
-manager_id = 1013917463
+# manager_id = 1013917463
+manager_id = 933705953
 admin_id = [933705953, 536563573]
 
 
@@ -358,7 +359,6 @@ def contact_as(message):
                     'Sizning so`rovingiz ko`rib chiqilmoqda, iltimos menedjerlar qo`ng`iroqini kuting']
             )
     except ContactUs.DoesNotExist:
-        contact_us = ContactUs()
         contact_us.chat_id = message.chat.id
         keyboard = telebot.types.ReplyKeyboardMarkup(
             resize_keyboard=True,
@@ -451,6 +451,8 @@ def cho_course(call):
         text='Name: ' + obj.full_name + '\n' + 'Phone number: ' + obj.phone_number + '\n' + 'Course: ' + str(
             obj.course.name) + '\n' + 'Date: ' + str(obj.date)[:20]
     )
+    contact_us.delete()
+    obj.save()
     start_message(call.message)
 
 
