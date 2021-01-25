@@ -4,7 +4,9 @@
  */
 section {
   background-color: #eeeeee; }
-
+.card-pad{
+  padding: 5%;
+}
 section,
 .container,
 .container-fluid {

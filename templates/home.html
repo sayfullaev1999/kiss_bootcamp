@@ -3,8 +3,9 @@
     {% include 'intro.html' %}
     <section class="features2 cid-slq0ZBExQm" id="features2-b">
         <div class="container">
+            <h2>Top News</h2>
             <div class="media-container-row">
-                {% for news in page_object.object_list %}
+                {% for news in news %}
                     <div class="card p-3 col-12 col-md-6 col-lg-3">
                         <div class="card-wrapper">
                             <div class="card-img">
@@ -13,12 +14,91 @@
                             <div class="card-box">
                                 <p class="mbr-text mbr-fonts-style display-7">
                                     {{ news.body|truncatewords:15 }}
-                                    <a href="{% url 'home_url' %}">Подробнее...</a>
+                                    <a href="{{ news.get_absolute_url }}">More details...</a>
                                 </p>
                             </div>
                             <div class="card-box">
                                 {{ news.date_pub }}
                             </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="container">
+            <h2>Courses</h2>
+            <div class="media-container-row">
+                {% for course in courses %}
+                    <div class="card p-3 col-12 col-md-6 col-lg-3">
+                        <div class="card-wrapper">
+                            <div class="card-img">
+                                <img src="{{ course.image.url }}" alt="course image">
+                            </div>
+                            <div class="card-box">
+                                <p class="mbr-text mbr-fonts-style display-7">
+                                    {{ course.info|truncatewords:15 }}
+                                    <a href="{{ course.get_absolute_url }}">More details...</a>
+                                </p>
+                            </div>
+                            <div class="card-box">
+                                {{ course.name }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="container">
+            <h2>MENTORS</h2>
+            <div class="media-container-row">
+                {% for mentor in mentors %}
+                    <div class="card p-3 col-12 col-md-6 col-lg-3">
+                        <div class="card-wrapper">
+                            <div class="card-img">
+                                <img src="{{ mentor.image.url }}" alt="">
+                            </div>
+                            <div class="card-box">
+                                <p class="mbr-text mbr-fonts-style display-7">
+                                    {{ mentor.info|truncatewords:15 }}
+                                    <a href="{{mentor.get_absolute_url}}">More details...</a><br>
+                                    {{ mentor.position }}
+                                </p>
+                            </div>
+                            <div class="card-box">
+                                <a href="{{ mentor.get_absolute_url }}">{{ mentor.user.first_name }} {{ mentor.user.last_name }}</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="container">
+            <h2>PROJECTS</h2>
+            <div class="media-container-row">
+                {% for project in projects %}
+                    <div class="card p-3 col-12 col-md-6 col-lg-3">
+                        <div class="card-wrapper">
+                            <div class="card-box">
+                                {{ project.name }}
+                            </div>
+                            <div class="card-img">
+                                <img src="{{ project.image.url }}" alt="project image">
+                            </div>
+                            <div class="card-box">
+                                <p class="mbr-text mbr-fonts-style display-7">
+                                    {{ project.info|truncatewords:15 }}
+                                    <a href="{{project.get_absolute_url}}">More details...</a>
+                                </p>
+                            </div>
+                            <div class="card-box">
+                                <p class="mbr-text mbr-fonts-style display-7">
+                                    <a href="{{ project.site }}">web-site</a>
+                                </p>
+                            </div>
+
                         </div>
                     </div>
                 {% endfor %}

@@ -7,7 +7,7 @@
                 <b>Khorezm Inovations and Software Solutions LLC</b>
             </h2>
             <h3 class="mbr-section-subtitle mbr-fonts-style display-5">
-                kiss-group.uz: великолепный конструктор сайтов
+                kiss-group.uz: freelance and teaching group
             </h3>
             <div class="container pt-4 mt-2">
                 <div class="media-container-row">
@@ -18,14 +18,14 @@
                             </div>
                             <div class="card-text">
                                 <h3 class="count pt-3 pb-3 mbr-fonts-style display-2">
-                                    100
+                                    {{ users.count }}
                                 </h3>
                                 <h4 class="mbr-content-title mbr-bold mbr-fonts-style display-7">
-                                    Безлимитно
+                                    Our users
                                 </h4>
                                 <p class="mbr-content-text mbr-fonts-style display-7">
-                                    Mobirise дает возможность создавать столько сайтов, сколько вам нравится, учитывая
-                                    тот факт, что это настольное приложение. Mobirise - идеальный инструмент.
+                                    Our users will be great programmers in Uzbekistan, because they are teached
+                                    by prof-programmers
                                 </p>
                             </div>
                         </div>
@@ -37,14 +37,13 @@
                             </div>
                             <div class="card-text">
                                 <h3 class="count pt-3 pb-3 mbr-fonts-style display-2">
-                                    200
+                                    {{ projects.count }}
                                 </h3>
                                 <h4 class="mbr-content-title mbr-bold mbr-fonts-style display-7">
-                                    Трендовые блоки
+                                    Our projects
                                 </h4>
                                 <p class="mbr-content-text mbr-fonts-style display-7">
-                                    Большая библиотека блоков-jumbotrons, изображений, параллакс, фоновое видео,
-                                    меню-гамбургер, липкое меню и многое другое.
+                                    Nowadays our company are working several projects, some of them ....
                                 </p>
                             </div>
                         </div>
@@ -56,13 +55,13 @@
                             </div>
                             <div class="card-text">
                                 <h3 class="count pt-3 pb-3 mbr-fonts-style display-2">
-                                    12
+                                    {{ sponsors.count }}
                                 </h3>
                                 <h4 class="mbr-content-title mbr-bold mbr-fonts-style display-7">
-                                    Bootstrap
+                                    Our Sponsors
                                 </h4>
                                 <p class="mbr-content-text mbr-fonts-style display-7">
-                                    Мощный Bootstrap - лучшая эффективность и высокая отзывчивость сайта.
+                                    We have more than {{ sponsors.count }} partners, and we are proud that our partners are with us
                                 </p>
                             </div>
                         </div>
@@ -77,11 +76,10 @@
             <div class="media-container-row">
                 <div class="col-12 align-center">
                     <h2 class="mbr-section-title pb-3 mbr-fonts-style display-2">
-                        Наши клиенты
+                        Our Sponsors
                     </h2>
                     <h3 class="mbr-section-subtitle mbr-light mbr-fonts-style display-5">
-                        Щелкните любое изображение, чтобы изменить. Нажмите синий значок шестерни в правом верхнем углу,
-                        Можете изменить фон, количество слайдов и видимых элементов.
+{#                        bla bla bla#}
                     </h3>
                 </div>
             </div>
@@ -90,50 +88,22 @@
         <div class="container">
             <div class="carousel slide" data-ride="carousel" role="listbox">
                 <div class="carousel-inner" data-visible="5">
-                    <div class="carousel-item ">
-                        <div class="media-container-row">
-                            <div class="col-md-12">
-                                <div class="wrap-img ">
-                                    <img src="{% static 'images/1.png' %}" class="img-responsive clients-img">
-                                </div>
+                    <div class="carousel-item flex-lg-row-reverse">
+                        {% for sponsor in sponsors %}
+                            <div class="media-container-row">
+                                <a href="#">
+                                    <div class="col-md-12">
+                                        <div class="wrap-img ">
+                                            <img src="{{ sponsor.logo.url }}" class="img-responsive clients-img">
+                                        </div>
+                                        <div class="wrap-img ">
+                                            {{ sponsor.name }}
+                                        </div>
+                                    </div>
+                                </a>
                             </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item ">
-                        <div class="media-container-row">
-                            <div class="col-md-12">
-                                <div class="wrap-img ">
-                                    <img src="{% static 'images/2.png' %}" class="img-responsive clients-img">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item ">
-                        <div class="media-container-row">
-                            <div class="col-md-12">
-                                <div class="wrap-img ">
-                                    <img src="{% static 'images/3.png' %}" class="img-responsive clients-img">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item ">
-                        <div class="media-container-row">
-                            <div class="col-md-12">
-                                <div class="wrap-img ">
-                                    <img src="{% static 'images/4.png' %}" class="img-responsive clients-img">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item ">
-                        <div class="media-container-row">
-                            <div class="col-md-12">
-                                <div class="wrap-img ">
-                                    <img src="{% static 'images/5.png' %}" class="img-responsive clients-img">
-                                </div>
-                            </div>
-                        </div>
+                        {% endfor %}
+
                     </div>
                 </div>
             </div>
