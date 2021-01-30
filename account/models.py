@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.shortcuts import reverse
 from django.utils.translation import gettext_lazy as _
+from django.utils.text import slugify
 
 
 class User(AbstractUser):
@@ -113,7 +114,7 @@ class Sponsor(models.Model):
         """
         if not self.pk:
             # We use name as a slug
-            self.slug = self.name.lower()
+            self.slug = slugify(self.name)
         # Calling the parent method
         super().save(*args, **kwargs)
 

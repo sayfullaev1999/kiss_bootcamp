@@ -3,7 +3,7 @@ from bot.bot import bot
 
 
 class Command(BaseCommand):
-    help = 'Телеграм бот'
+    help = 'Telegram Bot'
 
     def handle(self, *args, **kwargs):
         bot.polling(none_stop=True)
