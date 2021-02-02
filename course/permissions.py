@@ -16,4 +16,4 @@ class CourseMentorPermissionMixin(AccessMixin):
 
 class MentorPermissionMixin(CourseMentorPermissionMixin):
     def has_permissions(self, request):
-        return hasattr(self.request.user, 'mentor')
+        return hasattr(self.request.user, 'mentor') or self.request.user.is_superuser
