@@ -1,6 +1,7 @@
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView
+from django.views.generic import DetailView
 
-from project.models import Project
+from .models import Project
 
 
 class ProjectList(ListView):

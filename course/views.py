@@ -1,37 +1,39 @@
-from django.views.generic.base import View
-from django.views.generic.detail import DetailView
+from django.views.generic import ListView
+from django.views.generic import DetailView
+from django.views.generic import CreateView
+from django.views.generic import UpdateView
+from django.views.generic import DeleteView
+from django.urls import reverse_lazy
 
-from course.mixins import CourseCreateMixin, CourseUpdateMixin, CourseDeleteMixin
 from course.models import Course
 from course.forms import CourseForm
-from django.views.generic.list import ListView
+from .permissions import CourseMentorPermissionMixin
+from .permissions import MentorPermissionMixin
 
 
 class CourseList(ListView):
-    queryset = Course.objects.all()
-    context_object_name = 'courses'
+    model = Course
     template_name = 'course/course_list.html'
 
 
 class CourseDetail(DetailView):
     model = Course
     template_name = 'course/course_detail.html'
-    extra_context = {'is_course_mentor': True}
 
 
-class CourseCreate(CourseCreateMixin, View):
+class CourseCreate(MentorPermissionMixin, CreateView):
     model = Course
     form_class = CourseForm
     template_name = 'course/course_create.html'
 
 
-class CourseUpdate(CourseUpdateMixin, View):
+class CourseUpdate(CourseMentorPermissionMixin, UpdateView):
     model = Course
     form_class = CourseForm
     template_name = 'course/course_update.html'
 
 
-class CourseDelete(CourseDeleteMixin, View):
+class CourseDelete(CourseMentorPermissionMixin, DeleteView):
     model = Course
     template_name = 'course/course_delete.html'
-    success_url = 'course_list_url'
+    success_url = reverse_lazy('course_list_url')

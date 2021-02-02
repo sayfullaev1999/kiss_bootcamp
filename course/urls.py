@@ -1,5 +1,9 @@
 from django.urls import path
-from course.views import CourseList, CourseDetail, CourseUpdate, CourseDelete, CourseCreate
+from course.views import CourseList
+from .views import CourseDetail
+from .views import CourseUpdate
+from .views import CourseDelete
+from .views import CourseCreate
 
 urlpatterns = [
     path('', CourseList.as_view(), name="course_list_url"),

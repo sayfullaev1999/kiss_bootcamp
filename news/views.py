@@ -1,9 +1,13 @@
-from django.views.generic import View, DetailView
-from django.views.generic.list import ListView
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.views.generic import ListView
+from django.views.generic import DetailView
+from django.views.generic import CreateView
+from django.views.generic import UpdateView
+from django.views.generic import DeleteView
+from django.urls import reverse_lazy
 
-from news.mixins import NewsUpdateMixin, NewsCreateMixin, NewsDeleteMixin
-from news.models import News
-from news.forms import NewsForm
+from .models import News
+from .forms import NewsForm
 
 
 class NewsList(ListView):
@@ -17,19 +21,22 @@ class NewsDetail(DetailView):
     template_name = 'news/news_detail.html'
 
 
-class NewsCreate(NewsCreateMixin, View):
+class NewsCreate(PermissionRequiredMixin, CreateView):
     model = News
     form_class = NewsForm
     template_name = 'news/news_create.html'
+    permission_required = ''
 
 
-class NewsUpdate(NewsUpdateMixin, View):
+class NewsUpdate(PermissionRequiredMixin, UpdateView):
     model = News
     form_class = NewsForm
     template_name = 'news/news_update.html'
+    permission_required = ''
 
 
-class NewsDelete(NewsDeleteMixin, View):
+class NewsDelete(PermissionRequiredMixin, DeleteView):
     model = News
     template_name = 'news/news_delete.html'
-    success_url = 'news_list_url'
+    success_url = reverse_lazy('news_list_url')
+    permission_required = ''

@@ -1,6 +1,6 @@
 from django.core.exceptions import ValidationError
 from django import forms
-from news.models import News
+from .models import News
 
 
 class NewsForm(forms.ModelForm):

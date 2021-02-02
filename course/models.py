@@ -1,6 +1,8 @@
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from django.utils.text import slugify
+
 from account.models import Mentor
 
 
@@ -57,13 +59,14 @@ class Course(models.Model):
         """
         if not self.id:
             # We use name as a slug
-            self.slug = self.name.lower()
+            self.slug = slugify(self.name.lower())
         # Calling the parent method
         super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = _('course')
         verbose_name_plural = _('courses')
+        permissions = ''
 
     def __str__(self):
         """

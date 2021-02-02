@@ -1,7 +1,7 @@
 from django.contrib import admin, messages
 from django.utils.translation import ngettext
 
-from news.models import News
+from .models import News
 
 
 @admin.register(News)
