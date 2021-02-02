@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
+from django.utils.text import slugify
 
 from account.models import User
 
@@ -38,7 +39,7 @@ class Project(models.Model):
         """
         if not self.id:
             # We use name as a slug
-            self.slug = self.name.lower()
+            self.slug = slugify(self.name.lower())
         # Calling the parent method
         super().save(*args, **kwargs)
 
