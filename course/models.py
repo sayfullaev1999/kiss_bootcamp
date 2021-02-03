@@ -66,7 +66,6 @@ class Course(models.Model):
     class Meta:
         verbose_name = _('course')
         verbose_name_plural = _('courses')
-        permissions = ''
 
     def __str__(self):
         """
@@ -83,6 +82,7 @@ class ContactUs(models.Model):
     chat_id = models.PositiveIntegerField(
         _('telegram user id'),
         blank=True,
+        null=True,
         help_text=_('Leave the fields blank if you want to create an entry from the site')
     )
     full_name = models.CharField(_('full name'), max_length=150)
