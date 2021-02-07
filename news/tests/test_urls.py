@@ -7,6 +7,8 @@ from ..views import NewsDetail
 from ..views import NewsCreate
 from ..views import NewsUpdate
 from ..views import NewsDelete
+from ..views import Subscribe
+from ..views import Confirm
 
 
 class UrlTest(SimpleTestCase):
@@ -29,3 +31,11 @@ class UrlTest(SimpleTestCase):
     def test_news_delete_url(self):
         url = reverse('news_delete_url', kwargs={'slug': 'some-slug'})
         self.assertEquals(resolve(url).func.view_class, NewsDelete)
+
+    def test_subscribe_url(self):
+        url = reverse('subscribe_url')
+        self.assertEquals(resolve(url).func.view_class, Subscribe)
+
+    def test_confirm_url(self):
+        url = reverse('confirm_url', kwargs={'status': 'active', 'uuid': 'some-uuid'})
+        self.assertEquals(resolve(url).func.view_class, Confirm)

@@ -1,0 +1,13 @@
+<div class="media-container-column" data-form-type="formoid">
+    <form class="form-inline" action="{% url 'subscribe_url' %}" method="post">
+        {% csrf_token %}
+            <div class="form-group">
+                {{ subscriber_form.as_p }}
+            </div>
+        <div class="input-group-btn m-2">
+            <button href="" class="btn btn-primary display-4" type="submit" role="button">
+                SUBSCRIBE
+            </button>
+        </div>
+    </form>
+</div>

@@ -2,6 +2,7 @@ from django.contrib import admin, messages
 from django.utils.translation import ngettext
 
 from .models import News
+from .models import Subscriber
 
 
 @admin.register(News)
@@ -32,3 +33,28 @@ class NewsAdmin(admin.ModelAdmin):
 
     make_active.short_description = "Mark selected news as active"
     make_not_active.short_description = "Mark selected news as not active"
+
+
+@admin.register(Subscriber)
+class SubscriberAdmin(admin.ModelAdmin):
+    fields = ('email', 'confirmed')
+    list_display = ('email', 'confirmed')
+    search_fields = ('email',)
+    list_filter = ('confirmed',)
+    actions = ('make_confirmed', 'make_not_confirmed')
+
+    def make_confirmed(self, request, queryset):
+        updated = queryset.update(confirmed=True)
+        self.message_user(request, ngettext(
+            '%d Subscriber was successfully marked as confirmed.',
+            '%d Subscribers was successfully marked as confirmed.',
+            updated
+        ) % updated, messages.SUCCESS)
+
+    def make_not_confirmed(self, request, queryset):
+        updated = queryset.update(confirmed=False)
+        self.message_user(request, ngettext(
+            '%d Subscriber was successfully marked as not confirmed.',
+            '%d Subscribers was successfully marked as not confirmed.',
+            updated
+        ) % updated, messages.SUCCESS)

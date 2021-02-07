@@ -73,24 +73,7 @@
                 <p class="mbr-text mbr-fonts-style form-text display-7">
                     Monthly updates and free resources.
                 </p>
-                <div class="media-container-column" data-form-type="formoid">
-                    <form class="form-inline" action="{% url 'home_url' %}/" method="post">
-                        <input type="hidden" value=""
-                               data-form-email="true">
-                        <div class="form-group">
-                            <label for="email-footer4-m"></label>
-                            <input type="email" class="form-control input-sm input-inverse my-2"
-                                   name="email"
-                                   required="" data-form-field="Email"
-                                   placeholder="Email" id="email-footer4-m">
-                        </div>
-                        <div class="input-group-btn m-2">
-                            <button href="" class="btn btn-primary display-4" type="submit" role="button">
-                                SUBSCRIBE
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                {% include 'news/subscribe.html' %}
                 <p class="mb-4 mbr-fonts-style foot-title display-7">
                     Contact Us
                 </p>

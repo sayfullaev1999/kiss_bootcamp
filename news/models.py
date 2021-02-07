@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -70,3 +71,31 @@ class News(models.Model):
         return self.title
 
 
+class Subscriber(models.Model):
+    """
+    The Subscriber model
+    The conf_uuid field are optional (default=uuid.uuid4()), confirmed field are optional (default=False).
+    Other fields are required
+    """
+    email = models.EmailField(_('email address'), unique=True)
+    conf_uuid = models.UUIDField(
+        _('confirmed UUID'),
+        default=uuid.uuid4(),
+        editable=False,
+        help_text=_('Unique uuid used to confirm their email')
+    )
+    confirmed = models.BooleanField(
+        _('confirmed'),
+        default=False,
+        help_text=_('Whether subscribed or not')
+    )
+
+    def __str__(self):
+        """
+        Return the user email.
+        """
+        return self.email
+
+    class Meta:
+        verbose_name = 'subscriber'
+        verbose_name_plural = 'subscribers'

@@ -1,6 +1,8 @@
 from django.core.exceptions import ValidationError
 from django import forms
+
 from .models import News
+from .models import Subscriber
 
 
 class NewsForm(forms.ModelForm):
@@ -18,3 +20,12 @@ class NewsForm(forms.ModelForm):
         if new_slug == 'create':
             raise ValidationError('URL не может словом "Create"')
         return new_slug
+
+
+class SubscriberForm(forms.ModelForm):
+    class Meta:
+        model = Subscriber
+        fields = ['email']
+        widgets = {
+            'email': forms.EmailInput(attrs={'class': 'form-control'})
+        }
