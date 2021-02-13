@@ -20,7 +20,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = [
 ]
-
+PROTOCOL = 'https'
 # Application definition
 
 INSTALLED_APPS = [
@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'bot.apps.BotConfig',
     'account.apps.AccountConfig',
     'course.apps.CourseConfig',
@@ -37,6 +38,7 @@ INSTALLED_APPS = [
     'news.apps.NewsConfig',
     'project.apps.ProjectConfig',
 ]
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -133,7 +135,7 @@ REGISTER_REDIRECT_URL = '/'
 
 DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')
 
-
+# SMTP
 EMAIL_HOST = os.getenv('EMAIL_HOST')
 EMAIL_PORT = int(os.getenv('EMAIL_PORT'))
 EMAIL_USE_TLS = bool(os.getenv('EMAIL_USE_TLS'))
@@ -141,6 +143,23 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 AUTH_USER_MODEL = 'account.User'
+
+# Redis
+REDIS_HOST = '127.0.0.1'
+REDIS_PORT = '6379'
+REDIS_BD = '1'
+
+# Celery
+CELERY_BROKER_URL = 'redis://{host}:{port}/{bd}'.format(
+    host=REDIS_HOST,
+    port=REDIS_PORT,
+    bd=REDIS_BD
+)
+CELERY_BROKER_TRANSPORT_OPTION = {'visibility_timeout': 3600}  # an hour
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
 
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

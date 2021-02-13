@@ -7,6 +7,7 @@ from .views import NewsDelete
 from .views import Subscribe
 from .views import Confirm
 
+
 urlpatterns = [
     path('', NewsList.as_view(), name='news_list_url'),
     path('subscribe/', Subscribe.as_view(), name='subscribe_url'),

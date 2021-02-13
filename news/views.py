@@ -1,6 +1,4 @@
-from django.conf import settings
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.core.mail import send_mail
 from django.http import Http404
 from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import ListView
@@ -17,6 +15,7 @@ from .models import Subscriber
 from .forms import NewsForm
 from .forms import SubscriberForm
 from .utils import is_valid_status, is_valid_uuid4
+from .tasks import send_confirm_subscribe
 
 
 class NewsList(ListView):
@@ -60,16 +59,12 @@ class Subscribe(View):
 
         if bound_form.is_valid():
             subscriber = bound_form.save()
-            email = subscriber.email
-            uuid = subscriber.conf_uuid
-            link = request.build_absolute_uri() + f'confirm/active/{uuid}'
-            send_mail(
-                subject='Subscribing Confirmation',
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                message='',
-                recipient_list=[email],
-                html_message=f'Thank you for signing up!\nPlease complete the subscription process by clicking the <a href="{link}">link here</a>'
-            )
+            email = [subscriber.email]
+            link = request.build_absolute_uri() + f'confirm/active/{subscriber.conf_uuid}'
+            subject = 'Subscribing Confirmation'
+            html_message = f'Thank you for signing up!\nPlease complete the subscription ' \
+                           f'process by clicking the <a href="{link}">link here</a>'
+            send_confirm_subscribe.delay(subject, '', email, html_message)
         return redirect(reverse('home_url'))
 
 
