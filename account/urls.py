@@ -4,6 +4,7 @@ from account.views import Register, MentorList, MentorDetail, SponsorList, Spons
 
 urlpatterns = [
     path('', include('django.contrib.auth.urls')),
+    path('social-auth/', include('social_django.urls')),
     path('register/', Register.as_view(), name='register'),
     path('mentors/', MentorList.as_view(), name='mentor_list_url'),
     path('mentor/<str:slug>/', MentorDetail.as_view(), name='mentor_detail_url'),

@@ -8,7 +8,7 @@
     <section class="features2 cid-slq0ZBExQm" id="features2-b">
     <div class="container">
         <h1 class="text-center">This is registration page</h1>
-            <form action="{% url 'register' %}" method="post">
+            <form action="{% url 'register' %}" method="post" novalidate>
                 {% csrf_token %}
                 {% for foo in form %}
                     {{ foo.label }}

@@ -11,6 +11,11 @@ urlpatterns = [
     path('accounts/', include('account.urls')),
     path('course/', include('course.urls')),
     path('project/', include('project.urls')),
+
+    # rest_framework
+    # path('api-auth/', include('rest_framework.urls')),
+    # path('api/v1/', include('course.urls')),
+    # path('api/v1/', include('course.urls')),
 ]
 
 if settings.DEBUG:

@@ -1,6 +1,4 @@
 {% load static %}
-
-
 <section class="menu cid-qTkzRZLJNu" once="menu" id="menu1-0">
     <nav class="navbar navbar-expand beta-menu navbar-dropdown align-items-center navbar-fixed-top navbar-toggleable-sm">
         <div class="menu-logo">
@@ -50,9 +48,15 @@
                     </a>
                 </li>
                 {% if user.is_authenticated %}
+
                     <li class="nav-item">
                         <div class="dropdown nav-item">
-                            <div class="dropbtn">{{ user.get_full_name }}</div>
+                            {% if user.get_full_name %}
+                                <div class="dropbtn">{{ user.get_full_name }}</div>
+                            {% else %}
+                                <div class="dropbtn">{{ user.username }}</div>
+                            {% endif %}
+
                             <div class="dropdown-content nav-item">
                                 <a class="nav-link link text-black display-4" href="{% url 'password_change' %}">Settings</a>
                                 <a class="nav-link link text-black display-4" href="{% url 'logout' %}">Logout</a>
@@ -65,11 +69,26 @@
                     <li class="nav-item">
                         <div class="dropdown nav-item">
                             <div class="dropbtn">
-                                <img class="login-img" src="{% static 'images/login.jpg' %}" alt="login"  >
+                                <img class="login-img" src="{% static 'images/login.jpg' %}" alt="login">
                             </div>
                             <div class="dropdown-content nav-item">
-                                <a class="nav-link link text-black display-4" href="{% url 'login' %}">Signin</a>
-                                <a class="nav-link link text-black display-4" href="{% url 'register' %}">Signup</a>
+                                <a class="nav-link link text-black display-4"
+                                   href="{% url 'login' %}">Signin</a>
+                                <a class="nav-link link text-black display-4"
+                                   href="{% url 'register' %}">Signup</a>
+                                <a class="nav-link link text-black display-4"
+                                   href="{% url 'social:begin' 'facebook' %}">
+                                    <i></i>
+                                    Facebook
+                                </a>
+                                <a class="nav-link link text-black display-4"
+                                   href="{% url 'social:begin' 'github' %}">
+                                    Github
+                                </a>
+                                <a class="nav-link link text-black display-4"
+                                   href="{% url 'social:begin' 'google-oauth2' %}">
+                                    Google
+                                </a>
                             </div>
                         </div>
                     </li>

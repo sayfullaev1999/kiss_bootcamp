@@ -29,5 +29,7 @@ sqlparse==0.4.1
 tornado==6.1
 urllib3==1.26.2
 vedis==0.7.1
+djangorestframework==3.12.2
+social-auth-app-django
 vine==1.3.0
 wcwidth==0.2.5
