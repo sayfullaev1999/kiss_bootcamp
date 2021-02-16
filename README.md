@@ -21,25 +21,41 @@ source venv/bin/activate
 pip3 install -r requirements.txt
 ```
 ### Step 5. Create a .env file in your project directory
+
 Add the following settings for the project there
-> #Telegram bot configuration  
+```sh
+# DJANGO Configuration
+SECRET_KEY
+DEBUG
+IP
+DOMAIN
 
-> PRODUCTION_TOKEN = `YOUR PRODUCTION TOKEN TELEGRAM BOT`  
+# BOT configuration
+PRODUCTION_TOKEN
+LOCAL_TOKEN
 
-> LOCAL_TOKEN = `YOUR LOCAL TOKEN TELEGRAM BOT`  
+# SMTP server configuration
+EMAIL_HOST
+EMAIL_PORT
+EMAIL_USE_TLS
+EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD
 
-> #Smtp configuration  
+# DB configuration
+NAME_DB
+USER_DB
+PASSWORD_DB
 
-> EMAIL_HOST = `smtp.email-domain.com`  
-
-> EMAIL_PORT = `587`  
-
-> EMAIL_USE_TLS = `True`  
-
-> EMAIL_HOST_USER = `yourusername@youremail.com`  
-
-> EMAIL_HOST_PASSWORD = `your_password`  
-
+# Social Media Login/Registeration
+SOCIAL_AUTH_FACEBOOK_KEY
+SOCIAL_AUTH_FACEBOOK_SECRET
+SOCIAL_AUTH_GITHUB_KEY
+SOCIAL_AUTH_GITHUB_SECRET
+SOCIAL_AUTH_LINKEDIN_OAUTH2_KEY
+SOCIAL_AUTH_LINKEDIN_OAUTH2_SECRET
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET
+```
 ### Step 5. Create and save migration
 ```sh
 python3 manage.py makemigrations
@@ -53,7 +69,10 @@ python3 manage.py runserver
 ## Tech
 * [Python3](https://python.org)
 * [Django Framework](https://docs.djangoproject.com)
-* [Git](https://git-scm.com/)
+* [Django Rest Framework](https://docs.djangoproject.com)
+* [Celery](https://git-scm.com/)
+* [Redis](https://git-scm.com/)
+* [Flower](https://git-scm.com/)
 * [JavaScript](https://www.javascript.com/)
 * [Bootstrap](https://getbootstrap.com/)
 * [HTML](https://html.com)
